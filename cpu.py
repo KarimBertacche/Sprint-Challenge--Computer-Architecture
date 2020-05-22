@@ -196,6 +196,49 @@ class CPU:
         elif op == math_op["MUL"]:
             self.register[reg_a] *= self.register[reg_b]
 
+        elif op == math_op["CMP"]:
+            """Compare the values in two registers."""
+            if self.register[self.operand_a] == self.register[self.operand_b]:
+                self.FL = 0b00000001
+
+            if self.register[self.operand_a] < self.register[self.operand_b]:
+                self.FL = 0b00000100
+
+            if self.register[self.operand_a] > self.register[self.operand_b]:
+                self.FL = 0b00000010
+
+        elif op == math_op["AND"]:
+            """Bitwise-AND the values in registerA and registerB, then store the result in registerA."""
+            self.register[self.operand_a] = self.register[self.operand_a] & self.register[self.operand_b]
+
+        elif op == math_op["OR"]:
+            """Perform a bitwise-OR between the values in registerA and registerB, storing the result in registerA."""
+            self.register[self.operand_a] = self.register[self.operand_a] | self.register[self.operand_b]
+
+        elif op == math_op["XOR"]:
+            """Perform a bitwise-XOR between the values in registerA and registerB, storing the result in registerA."""
+            self.register[self.operand_a] = self.register[self.operand_a] ^ self.register[self.operand_b]
+
+        elif op == math_op["NOT"]:
+            """Perform a bitwise-NOT on the value in a register."""
+            self.register[self.operand_a] = ~self.register[self.operand_a]
+
+        elif op == math_op["SHL"]:
+            """Shift the value in registerA left by the number of bits specified in registerB, filling the low bits with 0."""
+            number_of_bits = self.register[self.operand_b]
+
+            self.register[self.operand_a] = (self.register[self.operand_a] << number_of_bits) % 255
+
+        elif op == math_op["SHR"]:
+            """Shift the value in registerA right by the number of bits specified in registerB, filling the high bits with 0."""
+            number_of_bits = self.register[self.operand_b]
+
+            self.register[self.operand_a] = (self.register[self.operand_a] >> number_of_bits) % 255
+
+        elif op == math_op["MOD"]:
+            """Divide the value in the first register by the value in the second, storing the _remainder_ of the result in registerA."""
+            self.register[self.operand_a] = self.register[self.operand_a] % self.register[self.operand_b]
+
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -213,16 +256,16 @@ class CPU:
         """
 
         print(f"TRACE: %02X | %02X %02X %02X |" % (
-            self.pc,
-            #self.fl,
+            self.PC,
+            self.FL,
             #self.ie,
-            self.ram_read(self.pc),
-            self.ram_read(self.pc + 1),
-            self.ram_read(self.pc + 2)
+            self.ram_read(self.PC),
+            self.ram_read(self.PC + 1),
+            self.ram_read(self.PC + 2)
         ), end='')
 
         for i in range(8):
-            print(" %02X" % self.reg[i], end='')
+            print(" %02X" % self.register[i], end='')
 
         print()
 
