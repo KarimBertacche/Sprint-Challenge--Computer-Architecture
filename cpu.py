@@ -121,6 +121,24 @@ class CPU:
         # increment Stack Pointer count
         self.register[SP] += 1
 
+    def JMP(self):
+        """Jump to the address stored in the given register."""
+        self.PC = self.register[self.operand_a]
+    
+    def JEQ(self):
+        """If `equal` flag is set (true), jump to the address stored in the given register."""
+        if self.FL & 0b00000001 == 1:
+            self.PC = self.register[self.operand_a]
+        else:
+            self.PC += 2
+
+    def JNE(self):
+        """If `E` flag is clear (false, 0), jump to the address stored in the given register."""
+        if self.FL & 0b00000001 == 0:
+            self.PC = self.register[self.operand_a]
+        else:
+            self.PC += 2
+
     def ram_read(self, address):
         """Accepts an address to read and returns the value stored there"""
         self.MAR = address
