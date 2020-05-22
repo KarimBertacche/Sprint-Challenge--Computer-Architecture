@@ -18,7 +18,15 @@ binary_op = {
 math_op = {
     "ADD": 0b10100000,
     "SUB": 0b10100001,
-    "MUL": 0b10100010
+    "MUL": 0b10100010,
+    'CMP': 0b10100111,
+    'SHL': 0b10101100,
+    'SHR': 0b10101101,
+    'MOD': 0b10100100,
+    'AND': 0b10101000,
+    'OR': 0b10101010,
+    'XOR': 0b10101011,
+    'NOT': 0b01101001
 }
 
 # Stack Pointer
@@ -48,6 +56,9 @@ class CPU:
         self.operand_a = None
         self.operand_b = None
 
+        # Flags
+        self.FL = 0b00000000  
+
          # Branch Table
         self.instructions = {}
         self.instructions['HLT'] = self.HALT
@@ -57,6 +68,9 @@ class CPU:
         self.instructions['POP'] = self.POP
         self.instructions['CALL'] = self.CALL
         self.instructions['RET'] = self.RET
+        self.instructions['JMP'] = self.JMP
+        self.instructions['JEQ'] = self.JEQ
+        self.instructions['JNE'] = self.JNE
 
     
     def CALL(self):
